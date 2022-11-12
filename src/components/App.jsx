@@ -1,16 +1,23 @@
-export const App = () => {
-  return (
-    <div
-      style={{
-        height: '100vh',
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center',
-        fontSize: 40,
-        color: '#010101'
-      }}
-    >
-      React homework template
-    </div>
-  );
-};
+import { Component } from 'react';
+import { ImageGallery } from './ImageGallery/ImageGallery';
+import { Searchbar } from './Searchbar/Searchbar';
+
+export class App extends Component {
+  state = {
+    query: '',
+    queryArr: [],
+  };
+
+  onSubmit = name => {
+    this.setState({ query: name });
+  };
+
+  render() {
+    return (
+      <>
+        <Searchbar onSubmit={this.onSubmit}></Searchbar>
+        <ImageGallery queryArr={this.state.queryArr}></ImageGallery>
+      </>
+    );
+  }
+}
