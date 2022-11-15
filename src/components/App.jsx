@@ -3,6 +3,7 @@ import { Button } from './Button/Button';
 import { ImageGallery } from './ImageGallery/ImageGallery';
 import { Modal } from './Modal/Modal';
 import { Searchbar } from './Searchbar/Searchbar';
+import { Loader } from './Loader/Loader';
 
 import css from './App.module.css';
 
@@ -21,8 +22,9 @@ export class App extends Component {
     queryArr: [],
     largeImg: '',
     isModalShown: false,
-    reqStatus: 'idle',
+    status: 'idle',
     currentPage: 1,
+    totalImage: 0
   };
 
   componentDidUpdate(_, prevState) {
@@ -60,7 +62,7 @@ export class App extends Component {
 
   async requestFunc() {
     try {
-      this.setState({ reqStatus: 'pending' });
+      this.setState({ status: 'pending' });
 
       searchParams.set('q', this.state.query);
       searchParams.set('page', this.state.currentPage);
@@ -73,8 +75,8 @@ export class App extends Component {
         }
         this.setState(({ queryArr }) => ({
           queryArr: [...queryArr, ...res.data.hits],
-          reqStatus: 'resolved',
-          totalImg: res.data.total,
+          status: 'resolved',
+          totalImage: res.data.total,
         }));
       });
     } catch (error) {
@@ -90,10 +92,13 @@ export class App extends Component {
           queryArr={this.state.queryArr}
           click={this.onGalleryItemClick}
         />
-        <Button onClick={this.loadMore} />
+        {0 < this.state.queryArr.length < this.state.totalImage && (
+          <Button onClick={this.loadMore} />
+        )}
         {this.state.isModalShown && (
           <Modal src={this.state.largeImg} close={this.toggleModal} />
         )}
+         {this.state.status === 'pending' && <Loader />}
       </section>
     );
   }
