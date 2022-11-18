@@ -4,18 +4,9 @@ import { ImageGallery } from './ImageGallery/ImageGallery';
 import { Modal } from './Modal/Modal';
 import { Searchbar } from './Searchbar/Searchbar';
 import { Loader } from './Loader/Loader';
-// import axios from 'axios';
-import css from './App.module.css';
 import { API, searchParams } from './Servises/API';
 
-
-// const searchParams = new URLSearchParams({
-//   key: '30176034-3a939666b78dd32120afd5b2c',
-//   image_type: 'photo',
-//   orientation: 'horizontal',
-//   per_page: 12,
-// });
-
+import css from './App.module.css';
 
 export class App extends Component {
   state = {
@@ -25,10 +16,8 @@ export class App extends Component {
     isModalShown: false,
     status: 'idle',
     currentPage: 1,
-    totalImage: 0
+    totalImage: 0,
   };
-
-
 
   componentDidUpdate(_, prevState) {
     if (
@@ -84,25 +73,27 @@ export class App extends Component {
         }));
       });
     } catch (error) {
-      window.alert('Something wrong')
+      window.alert('Something wrong');
     }
   }
 
   render() {
+    const {onSubmit, onGalleryItemClick, loadMore, toggleModal, state :{queryArr, isModalShown, totalImage, largeImg, status}} = this
     return (
       <section className={css.App}>
-        <Searchbar onSubmit={this.onSubmit} />
+        <Searchbar onSubmit={onSubmit} />
         <ImageGallery
-          queryArr={this.state.queryArr}
-          click={this.onGalleryItemClick}
+          queryArr={queryArr}
+          click={onGalleryItemClick}
         />
-        {0 < this.state.queryArr.length && this.state.queryArr.length < this.state.totalImage && (
-          <Button onClick={this.loadMore} />
+        {0 < queryArr.length &&
+          queryArr.length < totalImage && (
+            <Button onClick={loadMore} />
+          )}
+        {isModalShown && (
+          <Modal src={largeImg} close={toggleModal} />
         )}
-        {this.state.isModalShown && (
-          <Modal src={this.state.largeImg} close={this.toggleModal} />
-        )}
-         {this.state.status === 'pending' && <Loader />}
+        {status === 'pending' && <Loader />}
       </section>
     );
   }

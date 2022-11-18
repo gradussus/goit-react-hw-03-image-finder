@@ -7,6 +7,5 @@ export const searchParams = new URLSearchParams({
     per_page: 12,
   });
 
-// export function setSearchParams () {}
 
 export const API = () =>  axios.get(`https://pixabay.com/api/?${searchParams}`)
